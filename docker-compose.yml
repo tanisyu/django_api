@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    volumes: 
+      - ./docker/data:/var/lib/postgresql/data
+    environment: 
+      POSTGRES_PASSWORD: password
+  web:
+    build: .
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    environment: 
+      POSTGRES_NAME: django_development
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST: db
